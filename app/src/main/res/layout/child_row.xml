@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/row_epx_recview"
+    android:weightSum="1"
+    android:layout_marginBottom="2dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    tools:ignore="RtlCompat">
+    <CheckBox
+        android:id="@+id/check_box"
+        android:layout_width="0dp"
+        android:layout_weight=".1"
+        android:layout_height="match_parent"
+        app:buttonTint="@color/colorPrimary"
+        android:button="@drawable/check_box_bg"
+        android:layout_marginStart="8dp"
+        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight=".7"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        >
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:singleLine="true"
+            android:text="dfsdfsdfsdf"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+
+            />
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:singleLine="true"
+            android:text="dfsdfsdfsdf"
+            android:layout_gravity="center"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight=".2"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        >
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:singleLine="true"
+            android:text="790"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:singleLine="true"
+            android:text="@string/sar"
+            android:layout_gravity="center"
+            android:gravity="center"
+
+            />
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

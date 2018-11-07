@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/smoothProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:spb_progressiveStop_speed="3.4"
+        app:spb_progressiveStart_speed="1.0"
+        app:spb_progressiveStart_activated="true"
+        app:spb_speed="1.0"
+        app:spb_stroke_width="4dp"
+        app:spb_sections_count="4"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        android:indeterminate="true"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_color="@color/colorPrimary"
+        app:spb_interpolator="spb_interpolator_decelerate"
+        />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:textSize="17sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        />
+
+</LinearLayout>

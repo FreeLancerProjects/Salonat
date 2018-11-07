@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#bc0a4f</color>
+    <color name="colorPrimaryDark">#bc0a4f</color>
+    <color name="colorAccent">#bc0a4f</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="toolbar_color">#f1ccd3</color>
+    <color name="unselected_color">#cf4ca3</color>
+    <color name="rate_bar_color">#f7aa00</color>
+    <color name="row_epx_recview">#ac97b8</color>
+    <color name="cost_bg">#593072</color>
+    <color name="button_right_left_color">#eb0096</color>
+    <color name="button_top_bottom_color">#e1008b</color>
+    <color name="icon_cart">#64171f</color>
+    <color name="hint_color">#e2dada</color>
+    <color name="gray0">#F5F5F5</color>
+    <color name="gray1">#EEEEEE</color>
+    <color name="gray2">#e0e0e0</color>
+    <color name="gray3">#bdbdbd</color>
+    <color name="gray4">#9e9e9e</color>
+    <color name="gray5">#757575</color>
+    <color name="gray6">#212121</color>
+    <color name="rate">#FFB300</color>
+    <color name="slide_rate">#F57F17</color>
+    <color name="light_rate">#FFF9C4</color>
+
+</resources>

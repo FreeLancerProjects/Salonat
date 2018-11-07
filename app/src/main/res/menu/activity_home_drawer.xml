@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:title="@string/home"
+            android:icon="@drawable/home_nav_icon"
+            android:checked="true"
+            />
+        <item
+            android:id="@+id/profile"
+            android:title="@string/profile"
+            android:icon="@drawable/profile_nav_icon"
+            />
+        <item
+            android:id="@+id/my_reservations"
+            android:title="@string/my_reserve"
+            android:icon="@drawable/cart_nav_icon"
+            />
+        <item
+            android:id="@+id/contact_us"
+            android:title="@string/contactus"
+            android:icon="@drawable/contact_nav_icon"
+            />
+        <item
+            android:id="@+id/terms"
+            android:title="@string/terms_and_conditions"
+            android:icon="@drawable/setting_nav_icon"
+            />
+        <item
+            android:id="@+id/logout"
+            android:title="@string/logout"
+            android:icon="@drawable/exit_nav_icon"
+            />
+    </group>
+
+
+
+</menu>
