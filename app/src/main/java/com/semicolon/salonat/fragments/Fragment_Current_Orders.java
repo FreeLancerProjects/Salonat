@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,7 @@ public class Fragment_Current_Orders extends Fragment {
     private ItemModel itemModel,itemModel2;
     private List<ServiceModel.Sub_Service> sub_serviceList;
     private HomeActivity homeActivity;
-    private int last_cost_removed=0;
-    private int reserve_cost ,cost;
+    private int cost;
 
     @Nullable
     @Override
@@ -73,7 +71,6 @@ public class Fragment_Current_Orders extends Fragment {
 
         //itemModel.RemoveItem(itemModel,subService);
 
-        Log.e("posremove",pos+"");
         sub_serviceList.remove(pos);
         adapter.notifyItemRemoved(pos);
 
@@ -83,7 +80,7 @@ public class Fragment_Current_Orders extends Fragment {
         {
 
 
-            cost = cost-reserve_cost-Integer.parseInt(subService.getSalon_cost());
+            cost = cost-Integer.parseInt(subService.getSalon_cost());
 
 
         }else if (itemModel.getFrom().equals(Tags.in_home))

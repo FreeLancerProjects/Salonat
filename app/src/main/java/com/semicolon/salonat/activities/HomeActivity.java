@@ -33,18 +33,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.semicolon.salonat.R;
+import com.semicolon.salonat.fragments.FragmentNotifications;
 import com.semicolon.salonat.fragments.Fragment_Contactus;
 import com.semicolon.salonat.fragments.Fragment_Home;
 import com.semicolon.salonat.fragments.Fragment_MyOrders;
 import com.semicolon.salonat.fragments.Fragment_MyReservations;
 import com.semicolon.salonat.fragments.Fragment_Profile;
-import com.semicolon.salonat.fragments.Fragment_Reservations;
 import com.semicolon.salonat.fragments.Fragment_Terms_Conditions;
 import com.semicolon.salonat.models.ItemModel;
 import com.semicolon.salonat.models.LocationModel;
 import com.semicolon.salonat.models.ResponsModel;
 import com.semicolon.salonat.models.SalonModel;
 import com.semicolon.salonat.models.ServiceModel;
+import com.semicolon.salonat.models.UnReadModel;
 import com.semicolon.salonat.models.UserModel;
 import com.semicolon.salonat.preference.Preferences;
 import com.semicolon.salonat.remote.Api;
@@ -81,6 +82,7 @@ public class HomeActivity extends AppCompatActivity
     private Fragment_Terms_Conditions fragment_terms_conditions;
     private Fragment_Contactus fragment_contactus;
     private Fragment_MyOrders fragment_myOrders;
+    private FragmentNotifications fragmentNotifications;
     private TextView tv_title;
     private Preferences preferences;
     private ImageView image;
@@ -93,6 +95,7 @@ public class HomeActivity extends AppCompatActivity
     private Button btn_my_order;
     private ItemSingleTone itemSingleTone;
     private ItemModel itemModel;
+    private int can_read=1;
 
     private List<ServiceModel.Sub_Service> sub_serviceList;
 
@@ -168,6 +171,36 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+
+        fl_not.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (can_read==1)
+                {
+                    ReadNotification(userModel.getUser_id());
+                }
+
+                if (fragmentNotifications==null)
+                {
+                    fragmentNotifications = FragmentNotifications.getInstance();
+                }
+
+                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof FragmentNotifications))
+                {
+                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
+                    {
+                        fragmentManager.popBackStack();
+
+                    }
+                }
+
+
+                if (!fragmentNotifications.isAdded())
+                {
+                    fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragmentNotifications).addToBackStack("fragmentNotifications").commit();
+                }
+            }
+        });
         ////////////////////////////////////////////////////////
         tv_title = findViewById(R.id.tv_title);
 
@@ -185,6 +218,7 @@ public class HomeActivity extends AppCompatActivity
             EventBus.getDefault().register(this);
             UpdateToken();
             UpdateUi(this.userModel);
+            getUnReadNotificationCount(userModel.getUser_id());
         }
     }
     public void UpdateUi(UserModel userModel)
@@ -193,6 +227,7 @@ public class HomeActivity extends AppCompatActivity
         Log.e("Photo",userModel.getUser_photo());
         Picasso.with(this).load(Tags.IMAGE_URL+userModel.getUser_photo()).into(image);
         tv_name.setText(userModel.getUser_full_name());
+        fl_not.setVisibility(View.VISIBLE);
     }
     private void UpdateToken()
     {
@@ -293,6 +328,66 @@ public class HomeActivity extends AppCompatActivity
 
 
 
+    }
+
+    private void getUnReadNotificationCount(String user_id)
+    {
+        Api.getService()
+                .getUnReadNotificationsCount(user_id)
+                .enqueue(new Callback<UnReadModel>() {
+                    @Override
+                    public void onResponse(Call<UnReadModel> call, Response<UnReadModel> response) {
+                        if (response.isSuccessful())
+                        {
+                            UpdateNotificationUi(response.body().getAlert_count());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UnReadModel> call, Throwable t) {
+                        Log.e("Error",t.getMessage());
+                        Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void ReadNotification(String user_id)
+    {
+        Api.getService()
+                .ReadNotifications(user_id,"1")
+                .enqueue(new Callback<ResponsModel>() {
+                    @Override
+                    public void onResponse(Call<ResponsModel> call, Response<ResponsModel> response) {
+                        if (response.isSuccessful())
+                        {
+                            if (response.body().getSuccess_read()==1)
+                            {
+                                UpdateNotificationUi(0);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponsModel> call, Throwable t) {
+                        Log.e("Error",t.getMessage());
+                        Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+    }
+
+    private void UpdateNotificationUi(int not_count)
+    {
+        if (not_count>0)
+        {
+            tv_not.setVisibility(View.VISIBLE);
+            tv_not.setText(String.valueOf(not_count));
+        }else
+            {
+                can_read=0;
+                tv_not.setVisibility(View.GONE);
+
+            }
     }
 
     private void ClearDataCart() {
@@ -406,9 +501,28 @@ public class HomeActivity extends AppCompatActivity
 
                         }
 
+
+
                         if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Profile))
                         {
-                            fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragment_profile).addToBackStack("fragment_profile").commit();
+                            if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
+                            {
+                                Log.e("profile","1");
+                                fragmentManager.popBackStack();
+                                if (!fragment_profile.isAdded())
+                                {
+                                    fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragment_profile).addToBackStack("fragment_profile").commit();
+
+                                }
+                            }else
+                                {
+                                    if (!fragment_profile.isAdded())
+                                    {
+                                        fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragment_profile).addToBackStack("fragment_profile").commit();
+
+                                    }
+                                }
+
 
                         }
 
@@ -432,14 +546,36 @@ public class HomeActivity extends AppCompatActivity
                 }else
                 {
                     UpdateTitle(getString(R.string.my_reserve));
+
                     if (fragmentMyReservation==null)
                     {
                         fragmentMyReservation = Fragment_MyReservations.getInstance();
                     }
 
-                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Reservations))
+
+                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_MyReservations))
                     {
-                        fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragmentMyReservation).addToBackStack("fragmentmyReservation").commit();
+                        if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
+                        {
+                            Log.e("my_reserve","2");
+
+                            fragmentManager.popBackStack();
+                            if(!fragmentMyReservation.isAdded())
+                            {
+                                fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragmentMyReservation).addToBackStack("fragmentmyReservation").commit();
+
+                            }
+
+                        }else
+                            {
+                                if(!fragmentMyReservation.isAdded())
+                                {
+                                    fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragmentMyReservation).addToBackStack("fragmentmyReservation").commit();
+
+                                }
+
+                            }
+
 
                     }
 
@@ -452,6 +588,7 @@ public class HomeActivity extends AppCompatActivity
 
                 UpdateTitle(getString(R.string.contactus));
 
+
                 if (fragment_contactus==null)
                 {
 
@@ -460,7 +597,26 @@ public class HomeActivity extends AppCompatActivity
 
                 if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Contactus))
                 {
-                    fragmentManager.beginTransaction().add(R.id.fragment_home_container, Fragment_Contactus.getInstance()).addToBackStack("fragment_contactus").commit();
+
+                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
+                    {
+                        Log.e("contact_us","3");
+
+                        fragmentManager.popBackStack();
+                        if(!fragment_contactus.isAdded())
+                        {
+                            fragmentManager.beginTransaction().add(R.id.fragment_home_container, Fragment_Contactus.getInstance()).addToBackStack("fragment_contactus").commit();
+
+                        }
+
+                    }else
+                        {
+                            if(!fragment_contactus.isAdded())
+                            {
+                                fragmentManager.beginTransaction().add(R.id.fragment_home_container, Fragment_Contactus.getInstance()).addToBackStack("fragment_contactus").commit();
+
+                            }
+                        }
 
                 }
 
@@ -476,7 +632,26 @@ public class HomeActivity extends AppCompatActivity
                 }
                 if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Terms_Conditions))
                 {
-                    fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_terms_conditions).addToBackStack("fragment_terms_conditions").commit();
+                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
+                    {
+                        Log.e("terms","4");
+
+                        fragmentManager.popBackStack();
+                        if(!fragmentMyReservation.isAdded())
+                        {
+                            fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_terms_conditions).addToBackStack("fragment_terms_conditions").commit();
+
+                        }
+
+                    }else
+                        {
+                            if(!fragmentMyReservation.isAdded())
+                            {
+                                fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_terms_conditions).addToBackStack("fragment_terms_conditions").commit();
+
+                            }
+                        }
+
 
                 }
 
@@ -493,7 +668,6 @@ public class HomeActivity extends AppCompatActivity
 
 
         }
-
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -751,6 +925,13 @@ public class HomeActivity extends AppCompatActivity
         fragmentManager.popBackStack("fragment_salon_details", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    public void ClearDataAfterReservation()
+    {
+        fragmentManager.popBackStack("fragment_salon_details", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ClearItemModel();
+
+    }
+
     //InReservationFragmentFromCurrentOrdersFragment
     public void UpdateItemModel(ItemModel itemModel)
     {
@@ -763,6 +944,11 @@ public class HomeActivity extends AppCompatActivity
         itemModel = null;
         itemSingleTone.setItemModel(itemModel);
         hideCartTotal();
+    }
+
+    public void ClearDataAfterTransfer() {
+        fragmentManager.popBackStack("fragmentNotifications", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ClearItemModel();
     }
 }
 

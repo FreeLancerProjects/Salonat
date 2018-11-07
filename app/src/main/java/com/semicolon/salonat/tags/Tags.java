@@ -1,7 +1,7 @@
 package com.semicolon.salonat.tags;
 
 public class Tags {
-    public static final String base_url = "http://salonat.devoloper.xyz/";
+    public static final String base_url = "http://salons8.com/";
     public static final String IMAGE_URL = base_url+"uploads/images/";
     public static final String ar_font="fonts/ar_font.otf";
     public static final String en_font="fonts/en_oswalid.ttf";
@@ -16,5 +16,11 @@ public class Tags {
 
     public static final String in_home = "2";
     public static final String in_salon = "1";
+
+    public static final String canPay="1";
+    public static final String salon_refuse_befor_pay="2";
+    public static final String salon_accept_after_pay="4";
+    public static final String salon_refuse_after_pay="5";
+
 
 }

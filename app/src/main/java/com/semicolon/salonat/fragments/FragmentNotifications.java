@@ -10,62 +10,76 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.semicolon.salonat.R;
-import com.semicolon.salonat.adapters.MyReservationAdapter;
+import com.semicolon.salonat.activities.HomeActivity;
+import com.semicolon.salonat.adapters.NotificationAdapter;
 import com.semicolon.salonat.models.MyReservationModel;
 import com.semicolon.salonat.models.UserModel;
 import com.semicolon.salonat.remote.Api;
 import com.semicolon.salonat.singletone.UserSingleTone;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Fragment_MyReservations extends Fragment {
+public class FragmentNotifications extends Fragment {
+    private ImageView image_back;
     private RecyclerView recView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager manager;
     private ProgressBar progBar;
-    private LinearLayout ll_no_reserve;
-    private List<MyReservationModel> myReservationModelList;
+    private LinearLayout ll_no_not;
+    private HomeActivity homeActivity;
     private UserSingleTone userSingleTone;
     private UserModel userModel;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_myreservations,container,false);
+        View view = inflater.inflate(R.layout.fragment_notification,container,false);
         initView(view);
-        return view;
+        return  view;
     }
 
-    public static Fragment_MyReservations getInstance()
+    public static FragmentNotifications getInstance()
     {
-        return new Fragment_MyReservations();
+        FragmentNotifications fragmentNotifications = new FragmentNotifications();
+        return fragmentNotifications;
     }
     private void initView(View view) {
         userSingleTone = UserSingleTone.getInstance();
         userModel = userSingleTone.getUserModel();
-        myReservationModelList = new ArrayList<>();
-        ll_no_reserve = view.findViewById(R.id.ll_no_reserve);
-        progBar = view.findViewById(R.id.progBar);
+        homeActivity = (HomeActivity) getActivity();
+        image_back = view.findViewById(R.id.image_back);
         recView = view.findViewById(R.id.recView);
-        manager  = new LinearLayoutManager(getActivity());
+        progBar = view.findViewById(R.id.progBar);
+        ll_no_not = view.findViewById(R.id.ll_no_not);
+
+        manager = new LinearLayoutManager(getActivity());
         recView.setLayoutManager(manager);
-        adapter = new MyReservationAdapter(getActivity(),myReservationModelList,this);
-        recView.setAdapter(adapter);
-        recView.setNestedScrollingEnabled(true);
-        getMyReservationData(userModel.getUser_id());
+
+        image_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homeActivity.Back();
+            }
+        });
+
+        getNotifications(userModel.getUser_id());
+
+
+
     }
 
-    private void getMyReservationData(String user_id) {
+    private void getNotifications(String user_id) {
         Api.getService()
-                .getMyReservations(user_id)
+                .getNotifications(user_id)
                 .enqueue(new Callback<List<MyReservationModel>>() {
                     @Override
                     public void onResponse(Call<List<MyReservationModel>> call, Response<List<MyReservationModel>> response) {
@@ -74,12 +88,12 @@ public class Fragment_MyReservations extends Fragment {
                             progBar.setVisibility(View.GONE);
                             if (response.body().size()>0)
                             {
-                                myReservationModelList.addAll(response.body());
-                                adapter.notifyDataSetChanged();
-                                ll_no_reserve.setVisibility(View.GONE);
+                                ll_no_not.setVisibility(View.GONE);
+                                adapter = new NotificationAdapter(getActivity(),response.body(),FragmentNotifications.this);
+                                recView.setAdapter(adapter);
                             }else
                                 {
-                                    ll_no_reserve.setVisibility(View.VISIBLE);
+                                    ll_no_not.setVisibility(View.VISIBLE);
 
                                 }
                         }
@@ -89,16 +103,13 @@ public class Fragment_MyReservations extends Fragment {
                     public void onFailure(Call<List<MyReservationModel>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         progBar.setVisibility(View.GONE);
+                        Toast.makeText(homeActivity, R.string.something, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    public void setItem(MyReservationModel myReservationModel) {
+        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container,Fragment_Payment.getInstance(myReservationModel)).addToBackStack("fragment_payment").commit();
 
-    public void setItemModel(MyReservationModel myReservationModel) {
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container,Fragment_MyReservationDetails.getInstance(myReservationModel)).addToBackStack("fragment_myreservation_details").commit();
     }
-
-
-
-
 }

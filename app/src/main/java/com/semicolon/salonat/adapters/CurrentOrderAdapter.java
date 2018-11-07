@@ -57,7 +57,7 @@ public class CurrentOrderAdapter extends RecyclerView.Adapter<CurrentOrderAdapte
     }
 
     class Holder extends RecyclerView.ViewHolder  {
-        private TextView tv_name, tv_price,tv_time,tv_date;
+        private TextView tv_name, tv_price,tv_time;
         private ImageView image_delete;
 
         public Holder(View itemView) {
@@ -66,7 +66,6 @@ public class CurrentOrderAdapter extends RecyclerView.Adapter<CurrentOrderAdapte
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_price = itemView.findViewById(R.id.tv_price);
             tv_time = itemView.findViewById(R.id.tv_time);
-            tv_date = itemView.findViewById(R.id.tv_date);
             image_delete = itemView.findViewById(R.id.image_delete);
 
 

@@ -8,6 +8,7 @@ import com.semicolon.salonat.models.SalonModel;
 import com.semicolon.salonat.models.ServiceModel;
 import com.semicolon.salonat.models.SocialContactModel;
 import com.semicolon.salonat.models.Terms_Conditions;
+import com.semicolon.salonat.models.UnReadModel;
 import com.semicolon.salonat.models.UserModel;
 import com.semicolon.salonat.models.VoteModel;
 
@@ -120,8 +121,9 @@ public interface Services {
     Call<List<VoteModel>> getClientsVotes(@Path("id_salon") String id_salon,@Path("in_type") String in_type);
 
     @FormUrlEncoded
-    @POST("Api/Resevation/{id_salon}")
-    Call<ResponsModel> book(@Path("id_salon") String id_salon,
+    @POST("Api/Resevation/{user_id}/{id_salon}")
+    Call<ResponsModel> book(@Path("user_id") String user_id,
+                            @Path("id_salon") String id_salon,
                             @Field("reservation_cost") String reservation_cost,
                             @Field("reservation_date") String reservation_date,
                             @Field("reservation_time") String reservation_time,
@@ -139,5 +141,26 @@ public interface Services {
     @GET("Api/MyResevation/{user_id}")
     Call<List<MyReservationModel>> getMyReservations(@Path("user_id") String user_id);
 
+    @GET("Api/MyNotifications/{user_id}")
+    Call<List<MyReservationModel>> getNotifications(@Path("user_id") String user_id);
+
+    @GET("Api/UnNotifications/{user_id}")
+    Call<UnReadModel> getUnReadNotificationsCount(@Path("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("Api/UnNotifications/{user_id}")
+    Call<ResponsModel> ReadNotifications(@Path("user_id") String user_id,
+                                         @Field("read_all") String read_all
+                                         );
+
+    @Multipart
+    @POST("Api/Transformation/{id_reservation}")
+    Call<ResponsModel> payment(@Path("id_reservation") String id_reservation,
+                               @Part("transformation_person") RequestBody transformation_person,
+                               @Part("transformation_phone") RequestBody transformation_phone,
+                               @Part("transformation_amount") RequestBody transformation_amount,
+                               @Part MultipartBody.Part transformation_image
+
+                               );
 }
 

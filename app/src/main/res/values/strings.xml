@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Salonat</string>
+    <string name="app_name">Salon8</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="google_key">AIzaSyDWgrZi2N2RhGrYyBYeOBSzUQpZE3sVjYk</string>
@@ -113,5 +113,16 @@
     <string name="my_reserve">My reservations</string>
     <string name="details">Details</string>
     <string name="ph_pas_incorr">phone or password is incorrect</string>
+    <string name="payment">payment</string>
+    <string name="refuse_reserv">Reservation refused</string>
+    <string name="accept_reserve">Reservation accepted , confirm reservation</string>
+    <string name="no_notifications_to_display">No notifications to display</string>
+    <string name="conf_reserve">Reservation confirmed successfully</string>
+    <string name="transfer_amount">Tranfer amount</string>
+    <string name="transfer_photo">Transfer photo</string>
+    <string name="upload_image">Upload photo</string>
+    <string name="amo_req">Transfer amount is required</string>
+    <string name="sel_trans_img">Choose trasnfer photo</string>
+    <string name="bokng">Booking...</string>
 
 </resources>

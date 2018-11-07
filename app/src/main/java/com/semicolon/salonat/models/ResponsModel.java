@@ -9,6 +9,8 @@ public class ResponsModel implements Serializable {
     private int success_rest;
     private int success_token_id;
     private int success_resevation;
+    private int success_read;
+    private int success_transformation;
 
     public int getSuccess_contact() {
         return success_contact;
@@ -32,5 +34,13 @@ public class ResponsModel implements Serializable {
 
     public int getSuccess_resevation() {
         return success_resevation;
+    }
+
+    public int getSuccess_read() {
+        return success_read;
+    }
+
+    public int getSuccess_transformation() {
+        return success_transformation;
     }
 }

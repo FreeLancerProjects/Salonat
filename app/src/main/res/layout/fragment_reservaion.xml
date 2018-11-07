@@ -2,173 +2,198 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="20dp"
     >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/ll_my_order_bg"
-        android:padding="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-
-            >
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/icon_cart"
-                android:textStyle="bold"
-                android:textSize="17sp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:gravity="center_vertical"
-                android:text="@string/total"
-
-                />
-            <TextView
-                android:id="@+id/tv_reservation_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:gravity="center_vertical"
-                android:text="150 ريال"
-
-                />
-        </LinearLayout>
-
-
-
-
-        <LinearLayout
-            android:id="@+id/ll_choose_date"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:weightSum="3"
-            android:orientation="horizontal"
-            android:background="@drawable/ll_date_time_bg"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-
-            >
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/calendar"
+                android:orientation="vertical"
+                android:background="@drawable/ll_my_order_bg"
                 android:padding="8dp"
-                />
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="0dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginRight="45dp"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/icon_cart"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/total"
+
+                        />
+                    <TextView
+                        android:id="@+id/tv_reservation_cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:gravity="center_vertical"
+                        android:text="150 ريال"
+
+                        />
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:id="@+id/ll_choose_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:weightSum="3"
+                    android:orientation="horizontal"
+                    android:background="@drawable/ll_date_time_bg"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginRight="45dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+
+                    >
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".5"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/calendar"
+                        android:padding="8dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="2"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:text="@string/choose_date"
+                        android:textAllCaps="true"
+                        android:longClickable="false"
+                        android:clickable="false"
+                        />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".5"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/botom_arrow"
+                        android:padding="10dp"
+                        android:longClickable="false"
+                        android:clickable="false"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_choose_time"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:weightSum="3"
+                    android:orientation="horizontal"
+                    android:background="@drawable/ll_date_time_bg"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginRight="45dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+
+                    >
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".5"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/clock"
+                        android:padding="8dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="2"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:text="@string/choose_time"
+                        android:textAllCaps="true"
+                        android:longClickable="false"
+                        android:clickable="false"
+                        />
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".5"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/botom_arrow"
+                        android:padding="10dp"
+                        android:longClickable="false"
+                        android:clickable="false"
+                        />
+
+
+                </LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginRight="45dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="30dp"
+                    >
+                    <EditText
+                        android:id="@+id/edt_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:singleLine="true"
+                        android:background="@drawable/edt_login_bg"
+                        android:gravity="center"
+                        android:hint="@string/address"
+                        android:visibility="gone"
+                        />
+
+                </FrameLayout>
+            </LinearLayout>
+            <Button
+                android:id="@+id/btn_book"
+                android:layout_width="150dp"
                 android:layout_height="40dp"
-                android:layout_weight="2"
-                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_login_bg"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-20dp"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:gravity="center"
-                android:text="@string/choose_date"
-                android:textAllCaps="true"
-                android:longClickable="false"
-                android:clickable="false"
-                />
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/botom_arrow"
-                android:padding="10dp"
-                android:longClickable="false"
-                android:clickable="false"
+                android:text="@string/book"
+
                 />
 
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ll_choose_time"
-
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:weightSum="3"
-            android:orientation="horizontal"
-            android:background="@drawable/ll_date_time_bg"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:layout_marginBottom="30dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-
-            >
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/clock"
-                android:padding="8dp"
-                />
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="2"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:text="@string/choose_time"
-                android:textAllCaps="true"
-                android:longClickable="false"
-                android:clickable="false"
-                />
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/botom_arrow"
-                android:padding="10dp"
-                android:longClickable="false"
-                android:clickable="false"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-    <Button
-        android:id="@+id/btn_book"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:background="@drawable/btn_login_bg"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-20dp"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:text="@string/book"
-        />
 </LinearLayout>

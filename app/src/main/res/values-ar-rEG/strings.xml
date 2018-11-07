@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">صالونات</string>
+    <string name="app_name">صالون8</string>
     <string name="navigation_drawer_open">فتح</string>
     <string name="navigation_drawer_close">غلق</string>
     <string name="google_key">AIzaSyDWgrZi2N2RhGrYyBYeOBSzUQpZE3sVjYk</string>
@@ -114,5 +114,16 @@
     <string name="my_reserve">حجوزاتي</string>
     <string name="details">التفاصيل</string>
     <string name="ph_pas_incorr">رقم الجوال او اسم المستخدم غير صحيح</string>
+    <string name="payment">الدفع</string>
+    <string name="refuse_reserv">تم رفض الحجز</string>
+    <string name="accept_reserve">تم قبول الحجز, تأكيد الحجز</string>
+    <string name="no_notifications_to_display">لا توجد إشعارات لعرضها</string>
+    <string name="conf_reserve">تم تأكيد الحجز بنجاح</string>
+    <string name="transfer_amount">مبلغ التحويل</string>
+    <string name="transfer_photo">صورة التحويل</string>
+    <string name="upload_image">تحميل صورة</string>
+    <string name="amo_req">مبلغ التحويل مطلوب</string>
+    <string name="sel_trans_img">إختر صورة التحويل</string>
+    <string name="bokng">Booking...</string>
 
 </resources>

@@ -91,8 +91,11 @@ public class UpdateLocation extends Service implements GoogleApiClient.OnConnect
     @Override
     public void onLocationChanged(Location location) {
         Log.e("lat",location.getLatitude()+"_");
-        Log.e("lng",location.getLatitude()+"_");
-
+        Log.e("lng",location.getLongitude()+"_");
+        if (googleApiClient!=null&&googleApiClient.isConnected())
+        {
+            LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(new LocationCallback());
+        }
         EventBus.getDefault().post(new LocationModel(location.getLatitude(),location.getLongitude()));
     }
 

@@ -30,7 +30,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="56dp"
                 tools:ignore="RtlCompat"
                 >
                 <TextView
@@ -41,6 +40,7 @@
                     android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textAllCaps="true"
+                    android:paddingEnd="56dp"
 
                     />
                 <LinearLayout
@@ -48,35 +48,6 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     >
-                    <FrameLayout
-                        android:id="@+id/fl_not"
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:visibility="gone"
-                        >
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/notification"
-                            android:padding="11dp"
-                            android:clickable="false"
-                            android:longClickable="false"
-                            />
-                        <TextView
-                            android:id="@+id/tv_not"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_margin="9dp"
-                            android:background="@drawable/not_edt_tv"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:gravity="center"
-                            android:visibility="gone"
-                            android:clickable="false"
-                            android:longClickable="false"
-                            />
-                    </FrameLayout>
-
                     <FrameLayout
                         android:id="@+id/fl_cart_not"
                         android:layout_width="56dp"
@@ -105,6 +76,37 @@
                             android:longClickable="false"
                             />
                     </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/fl_not"
+                        android:layout_width="56dp"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        >
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/notification"
+                            android:padding="11dp"
+                            android:clickable="false"
+                            android:longClickable="false"
+                            />
+                        <TextView
+                            android:id="@+id/tv_not"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_margin="9dp"
+                            android:background="@drawable/not_edt_tv"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:clickable="false"
+                            android:longClickable="false"
+
+                            />
+                    </FrameLayout>
+
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
