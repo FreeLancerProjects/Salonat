@@ -175,6 +175,7 @@ public class HomeActivity extends AppCompatActivity
         fl_not.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UpdateTitle(getString(R.string.notification));
                 if (can_read==1)
                 {
                     ReadNotification(userModel.getUser_id());

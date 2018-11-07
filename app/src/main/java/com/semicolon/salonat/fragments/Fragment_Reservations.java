@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +56,6 @@ public class Fragment_Reservations extends Fragment implements TimePickerDialog.
     private UserModel userModel;
     private HomeActivity homeActivity;
     private EditText edt_address;
-    private FrameLayout map;
     private String address = "";
 
 
@@ -85,7 +83,6 @@ public class Fragment_Reservations extends Fragment implements TimePickerDialog.
         userSingleTone = UserSingleTone.getInstance();
 
         edt_address = view.findViewById(R.id.edt_address);
-        map = view.findViewById(R.id.map);
         ll_choose_date = view.findViewById(R.id.ll_choose_date);
         ll_choose_time = view.findViewById(R.id.ll_choose_time);
         tv_date = view.findViewById(R.id.tv_date);
@@ -218,7 +215,6 @@ public class Fragment_Reservations extends Fragment implements TimePickerDialog.
         if (itemModel != null) {
             if (itemModel.getFrom().equals(Tags.in_salon)) {
                 edt_address.setVisibility(View.GONE);
-                map.setVisibility(View.GONE);
             } else {
                 edt_address.setVisibility(View.VISIBLE);
 
