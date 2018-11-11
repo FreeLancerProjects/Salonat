@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.siyamed.shapeimageview.RoundedImageView;
-import com.lamudi.phonefield.PhoneInputLayout;
 import com.semicolon.salonat.R;
 import com.semicolon.salonat.activities.HomeActivity;
 import com.semicolon.salonat.adapters.CityProfileAdapter;
@@ -324,7 +323,7 @@ public class Fragment_Profile extends Fragment {
         final TextView tv_title = view.findViewById(R.id.tv_title);
         final EditText edt_update = view.findViewById(R.id.edt_update);
         final EditText edt_newPassword = view.findViewById(R.id.edt_newPassword);
-        final PhoneInputLayout edt_check_phone = view.findViewById(R.id.edt_check_phone);
+        //final PhoneInputLayout edt_check_phone = view.findViewById(R.id.edt_check_phone);
         Button btn_update = view.findViewById(R.id.btn_update);
         Button btn_close = view.findViewById(R.id.btn_close);
 
@@ -438,24 +437,11 @@ public class Fragment_Profile extends Fragment {
                 {
 
                     String m_phone = edt_update.getText().toString();
-                    if (!TextUtils.isEmpty(m_phone))
-                    {
-                        if (!m_phone.startsWith("+"))
-                        {
-                            m_phone = "+"+m_phone;
-                        }
-                        edt_check_phone.setPhoneNumber(m_phone);
-
-                    }
 
                     if (TextUtils.isEmpty(m_phone))
                     {
                         edt_update.setError(getString(R.string.phone_req));
 
-
-                    }else if (!edt_check_phone.isValid())
-                    {
-                        edt_update.setError(getString(R.string.inv_phone));
 
                     }
                     else

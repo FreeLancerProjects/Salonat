@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.lamudi.phonefield.PhoneInputLayout;
 import com.semicolon.salonat.R;
 import com.semicolon.salonat.activities.HomeActivity;
 import com.semicolon.salonat.models.MyReservationModel;
@@ -45,7 +44,7 @@ public class Fragment_Payment extends Fragment {
     private static final String TAG="DATA";
     private ImageView image_back,image;
     private EditText edt_name,edt_phone,edt_amount;
-    private PhoneInputLayout edt_check_phone;
+    //private PhoneInputLayout edt_check_phone;
     private LinearLayout ll_upload_image;
     private Button btn_send;
     private final String read_per = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -87,7 +86,7 @@ public class Fragment_Payment extends Fragment {
         edt_name = view.findViewById(R.id.edt_name);
         edt_phone = view.findViewById(R.id.edt_phone);
         edt_amount = view.findViewById(R.id.edt_amount);
-        edt_check_phone = view.findViewById(R.id.edt_check_phone);
+        //edt_check_phone = view.findViewById(R.id.edt_check_phone);
         ll_upload_image = view.findViewById(R.id.ll_upload_image);
         btn_send = view.findViewById(R.id.btn_send);
 
@@ -132,7 +131,7 @@ public class Fragment_Payment extends Fragment {
         String m_phone = edt_phone.getText().toString();
         String m_amount = edt_amount.getText().toString();
 
-        if (!TextUtils.isEmpty(m_phone))
+       /* if (!TextUtils.isEmpty(m_phone))
         {
             if (!m_phone.startsWith("+"))
             {
@@ -140,9 +139,9 @@ public class Fragment_Payment extends Fragment {
             }
 
             edt_check_phone.setPhoneNumber(m_phone);
-        }
+        }*/
 
-        if (!TextUtils.isEmpty(m_name)&&!TextUtils.isEmpty(m_phone)&&edt_check_phone.isValid()&&!TextUtils.isEmpty(m_amount)&&uri!=null)
+        if (!TextUtils.isEmpty(m_name)&&!TextUtils.isEmpty(m_phone)&&!TextUtils.isEmpty(m_amount)&&uri!=null)
         {
             edt_phone.setError(null);
             edt_name.setError(null);
@@ -163,9 +162,6 @@ public class Fragment_Payment extends Fragment {
             {
 
                 edt_phone.setError(getString(R.string.phone_req));
-            }else if (!edt_check_phone.isValid())
-            {
-                edt_phone.setError(getString(R.string.inv_phone));
             }else
             {
                 edt_phone.setError(null);

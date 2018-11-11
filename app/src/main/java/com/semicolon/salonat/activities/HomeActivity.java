@@ -444,6 +444,19 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateNotification(UnReadModel unReadModel)
+    {
+        if (fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof FragmentNotifications)
+        {
+            fragmentNotifications.getNotifications(userModel.getUser_id());
+        }else
+            {
+                can_read=1;
+                getUnReadNotificationCount(userModel.getUser_id());
+            }
+    }
     public void UpdateTitle(String title)
 
     {

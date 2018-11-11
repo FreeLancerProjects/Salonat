@@ -77,7 +77,7 @@ public class FragmentNotifications extends Fragment {
 
     }
 
-    private void getNotifications(String user_id) {
+    public void getNotifications(String user_id) {
         Api.getService()
                 .getNotifications(user_id)
                 .enqueue(new Callback<List<MyReservationModel>>() {

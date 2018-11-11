@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -29,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lamudi.phonefield.PhoneInputLayout;
 import com.semicolon.salonat.R;
 import com.semicolon.salonat.adapters.CityAdapter;
 import com.semicolon.salonat.adapters.CountryAdapter;
@@ -61,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
     private CircleImageView image;
     private EditText edt_name,edt_email,edt_address,edt_phone,edt_password;
     private TextView tv_country,tv_city;
-    private PhoneInputLayout edt_check_phone;
+   // private PhoneInputLayout edt_check_phone;
     private Button btn_signup;
     private final String read_permition = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final int read_req = 2000,img=202;
@@ -103,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
         edt_password = findViewById(R.id.edt_password);
         tv_country = findViewById(R.id.tv_country);
         tv_city = findViewById(R.id.tv_city);
-        edt_check_phone = findViewById(R.id.edt_check_phone);
+        //edt_check_phone = findViewById(R.id.edt_check_phone);
         btn_signup = findViewById(R.id.btn_signup);
 
         btn_signup.setOnClickListener(new View.OnClickListener() {
@@ -342,14 +342,6 @@ public class SignUpActivity extends AppCompatActivity {
         String m_phone = edt_phone.getText().toString();
         String m_password = edt_password.getText().toString();
 
-        if (!TextUtils.isEmpty(m_phone))
-        {
-            if (!m_phone.startsWith("+"))
-            {
-                m_phone = "+"+m_phone;
-            }
-        }
-        edt_check_phone.setPhoneNumber(m_phone);
 
         if (!TextUtils.isEmpty(m_name)&&
                 !TextUtils.isEmpty(m_phone)&&
@@ -358,7 +350,6 @@ public class SignUpActivity extends AppCompatActivity {
                 !TextUtils.isEmpty(m_email)&&
                 !TextUtils.isEmpty(m_address)&&
                 !TextUtils.isEmpty(m_password)&&
-                edt_check_phone.isValid()&&
                 uri!=null&&
                 Patterns.EMAIL_ADDRESS.matcher(m_email).matches()) {
             edt_address.setError(null);
@@ -392,9 +383,6 @@ public class SignUpActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(m_phone))
                 {
                     edt_phone.setError(getString(R.string.phone_req));
-                }else if (!edt_check_phone.isValid())
-                {
-                    edt_phone.setError(getString(R.string.inv_phone));
                 }else
                 {
                     edt_phone.setError(null);
@@ -496,9 +484,22 @@ public class SignUpActivity extends AppCompatActivity {
     }
     private void SelectImage()
     {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent;
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
+        {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        }else
+            {
+                 intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+            }
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("image/*");
         startActivityForResult(intent.createChooser(intent,"Select Image"),img);
+
 
     }
 

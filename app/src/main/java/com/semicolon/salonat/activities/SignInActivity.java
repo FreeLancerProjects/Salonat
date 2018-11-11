@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lamudi.phonefield.PhoneInputLayout;
 import com.semicolon.salonat.R;
 import com.semicolon.salonat.models.UserModel;
 import com.semicolon.salonat.preference.Preferences;
@@ -28,7 +27,7 @@ public class SignInActivity extends AppCompatActivity {
     private EditText edt_phone,edt_password;
     private TextView tv_forget_password;
     private Button btn_signin,btn_signup,btn_skip;
-    private PhoneInputLayout edt_check_phone;
+    //private PhoneInputLayout edt_check_phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class SignInActivity extends AppCompatActivity {
         edt_phone = findViewById(R.id.edt_phone);
         edt_password = findViewById(R.id.edt_password);
         tv_forget_password = findViewById(R.id.tv_forget_password);
-        edt_check_phone = findViewById(R.id.edt_check_phone);
+        //edt_check_phone = findViewById(R.id.edt_check_phone);
         btn_signin = findViewById(R.id.btn_signin);
         btn_signup = findViewById(R.id.btn_signup);
         btn_skip = findViewById(R.id.btn_skip);
@@ -81,16 +80,16 @@ public class SignInActivity extends AppCompatActivity {
     private void CheckData() {
         String m_phone = edt_phone.getText().toString();
         String m_password = edt_password.getText().toString();
-        if (!TextUtils.isEmpty(m_phone))
+       /* if (!TextUtils.isEmpty(m_phone))
         {
             if (!m_phone.startsWith("+"))
             {
                 m_phone ="+"+m_phone;
             }
         }
-        edt_check_phone.setPhoneNumber(m_phone);
+        edt_check_phone.setPhoneNumber(m_phone);*/
 
-        if (!TextUtils.isEmpty(m_phone)&&edt_check_phone.isValid()&&!TextUtils.isEmpty(m_password))
+        if (!TextUtils.isEmpty(m_phone)&&!TextUtils.isEmpty(m_password))
         {
             edt_phone.setError(null);
             edt_password.setError(null);
@@ -101,10 +100,6 @@ public class SignInActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(m_phone))
                 {
                     edt_phone.setError(getString(R.string.phone_req));
-                }else if (!edt_check_phone.isValid())
-                {
-                    edt_phone.setError(getString(R.string.inv_phone));
-
                 }else
                     {
                         edt_phone.setError(null);
@@ -143,7 +138,7 @@ public class SignInActivity extends AppCompatActivity {
                                 finish();
                             }else if (response.body().getSuccess_login()==0)
                                 {
-                                    Toast.makeText(SignInActivity.this, R.string.ph_pas_incorr, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignInActivity.this, R.string.ph_pas_incorr, Toast.LENGTH_LONG).show();
                                 }
                         }
                     }
@@ -151,7 +146,7 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(SignInActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignInActivity.this,R.string.something, Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 });
