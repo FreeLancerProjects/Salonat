@@ -178,7 +178,10 @@ public class Fragment_Contactus extends Fragment {
                     public void onFailure(Call<SocialContactModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(), R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                         getActivity().finish();
                     }
                 });
@@ -270,7 +273,10 @@ public class Fragment_Contactus extends Fragment {
                     @Override
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
                         contact_progressDialog.dismiss();
-                        Toast.makeText(getActivity(), R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(), R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                         Log.e("Error",t.getMessage());
                     }
                 });

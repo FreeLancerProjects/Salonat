@@ -12,13 +12,14 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         android:elevation="0dp"
         android:fitsSystemWindows="true"
+        android:background="@color/toolbar_color"
         >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/toolbar_color"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:contentInsetEnd="0dp"
             app:contentInsetStart="0dp"
@@ -26,6 +27,7 @@
             app:contentInsetRight="0dp"
             android:elevation="0dp"
             android:fitsSystemWindows="true"
+
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -37,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/icon_cart"
                     android:textSize="17sp"
                     android:textAllCaps="true"
                     android:paddingEnd="56dp"

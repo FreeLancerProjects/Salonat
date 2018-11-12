@@ -108,7 +108,10 @@ public class Fragment_Vote_In_Home extends Fragment {
                     @Override
                     public void onFailure(Call<List<VoteModel>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                         progBar.setVisibility(View.GONE);
                     }
                 });

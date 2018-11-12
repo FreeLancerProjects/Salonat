@@ -27,7 +27,8 @@
                     android:id="@+id/image_bg"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:src="@drawable/user_profile"
+                    android:src="@drawable/prof_bg2"
+
                     />
 
             </FrameLayout>
@@ -48,11 +49,12 @@
                     app:siBorderColor="@color/gray1"
                     app:siRadius="5dp"
                     app:siBorderType="stroke"
-                    android:src="@drawable/user_profile"
+                    android:src="@drawable/prof_bg"
                     android:clickable="false"
                     android:longClickable="false"
+
                     />
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/image_update_photo"
                     android:layout_width="38dp"
                     android:layout_height="38dp"
@@ -61,7 +63,7 @@
                     android:src="@drawable/update_photo_camera"
                     android:padding="5dp"
                     android:background="@color/white"
-                    />
+                    />-->
             </FrameLayout>
 
         </LinearLayout>

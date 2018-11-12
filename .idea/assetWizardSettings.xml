@@ -55,12 +55,27 @@
                             <entry key="launcherLegacy">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="5" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="C:\Users\Delta\Desktop\Salonat\app_icon.png" />
-                                      <entry key="outputName" value="icon_launcher" />
+                                      <entry key="imageAsset" value="D:\Courses\work_android\FreeLancer\Screenshots\sal\ro.png" />
+                                      <entry key="outputName" value="icon_launcher_rounded" />
                                     </map>
                                   </option>
                                 </PersistentState>

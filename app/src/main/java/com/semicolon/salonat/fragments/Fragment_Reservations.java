@@ -206,7 +206,10 @@ public class Fragment_Reservations extends Fragment implements TimePickerDialog.
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
                         dialog.dismiss();
                         Log.e("Error", t.getMessage());
-                        Toast.makeText(getActivity(), R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }

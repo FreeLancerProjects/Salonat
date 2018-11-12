@@ -78,12 +78,7 @@ public class Fragment_Salon_details extends Fragment {
 
 
         rateBar = view.findViewById(R.id.rateBar);
-
-        rateBar.setEnabled(false);
-        rateBar.setClickable(false);
-        rateBar.setSelected(false);
-        rateBar.setFocusable(false);
-        rateBar.setFocusableInTouchMode(false);
+        rateBar.setIndicator(true);
         pager_main_photo = view.findViewById(R.id.pager_main_photo);
         btn_service = view.findViewById(R.id.btn_service);
         btn_location = view.findViewById(R.id.btn_location);
@@ -258,6 +253,7 @@ public class Fragment_Salon_details extends Fragment {
 
     }
     private void UpdateUI(final SalonModel salonModel) {
+        Log.e("salon_model",salonModel.getSalon_stars_num()+"___"+salonModel.getTitle());
         tv_name.setText(salonModel.getTitle());
         tv_type.setText("صالون/حريمي");
         SimpleRatingBar.AnimationBuilder animationBuilder = rateBar.getAnimationBuilder();
@@ -336,9 +332,18 @@ public class Fragment_Salon_details extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timerTask.cancel();
-        timer.purge();
-        timer.cancel();
+        if (timerTask!=null)
+        {
+            timerTask.cancel();
+
+        }
+
+        if (timer!=null)
+        {
+            timer.purge();
+            timer.cancel();
+        }
+
 
     }
 }

@@ -12,13 +12,15 @@
 
     <com.github.siyamed.shapeimageview.RoundedImageView
         android:id="@+id/image"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        app:siRadius="5dp"
-        app:siBorderColor="@color/white"
-        app:siBorderWidth="1dp"
-        app:siBorderType="stroke"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_marginBottom="8dp"
+        android:src="@drawable/prof_bg"
+        android:scaleType="centerCrop"
+        app:siBorderColor="@color/white"
+        app:siBorderType="stroke"
+        app:siBorderWidth="2dp"
+        app:siRadius="10dp"
         />
     <TextView
         android:id="@+id/tv_name"

@@ -98,7 +98,10 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         dialog.dismiss();
-                        Toast.makeText(ForgetPasswordActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(ForgetPasswordActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
 
                     }
                 });

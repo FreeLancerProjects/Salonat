@@ -54,20 +54,18 @@ public interface Services {
     @POST("AppUser/UpdateTokenId/{user_id}")
     Call<ResponsModel> UpdateTokenId(@Path("user_id") String user_id,
                                      @Field("user_token_id") String user_token_id);
-    @Multipart
+    @FormUrlEncoded
     @POST("AppUser/SignUp")
-    Call<UserModel> SignUp(@Part("user_pass") RequestBody user_pass,
-                           @Part("user_phone") RequestBody user_phone,
-                           @Part("user_country") RequestBody user_country,
-                           @Part("user_email") RequestBody user_email,
-                           @Part("user_full_name") RequestBody user_full_name,
-                           @Part("user_token_id") RequestBody user_token_id,
-                           @Part("user_google_lat") RequestBody user_google_lat,
-                           @Part("user_google_long") RequestBody user_google_long,
-                           @Part("user_city") RequestBody user_city,
-                           @Part("user_address") RequestBody user_address,
-                           @Part MultipartBody.Part user_photo
-                           );
+    Call<UserModel> SignUp(@Field("user_pass") String user_pass,
+                           @Field("user_phone") String user_phone,
+                           @Field("user_country") String user_country,
+                           @Field("user_email") String user_email,
+                           @Field("user_full_name") String user_full_name,
+                           @Field("user_token_id") String user_token_id,
+                           @Field("user_google_lat") String user_google_lat,
+                           @Field("user_google_long") String user_google_long,
+                           @Field("user_city") String user_city,
+                           @Field("user_address") String user_address);
 
     @FormUrlEncoded
     @POST("AppUser/Login")

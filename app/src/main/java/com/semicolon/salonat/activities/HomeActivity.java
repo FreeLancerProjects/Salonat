@@ -1,16 +1,25 @@
 package com.semicolon.salonat.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,11 +32,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -41,7 +56,6 @@ import com.semicolon.salonat.fragments.Fragment_MyReservations;
 import com.semicolon.salonat.fragments.Fragment_Profile;
 import com.semicolon.salonat.fragments.Fragment_Terms_Conditions;
 import com.semicolon.salonat.models.ItemModel;
-import com.semicolon.salonat.models.LocationModel;
 import com.semicolon.salonat.models.ResponsModel;
 import com.semicolon.salonat.models.SalonModel;
 import com.semicolon.salonat.models.ServiceModel;
@@ -49,12 +63,10 @@ import com.semicolon.salonat.models.UnReadModel;
 import com.semicolon.salonat.models.UserModel;
 import com.semicolon.salonat.preference.Preferences;
 import com.semicolon.salonat.remote.Api;
-import com.semicolon.salonat.service.UpdateLocation;
 import com.semicolon.salonat.share.Common;
 import com.semicolon.salonat.singletone.ItemSingleTone;
 import com.semicolon.salonat.singletone.UserSingleTone;
 import com.semicolon.salonat.tags.Tags;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -68,7 +80,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -85,20 +97,23 @@ public class HomeActivity extends AppCompatActivity
     private FragmentNotifications fragmentNotifications;
     private TextView tv_title;
     private Preferences preferences;
-    private ImageView image;
+    //private ImageView image;
     private TextView tv_name;
     private Intent intentService;
-    private FrameLayout fl_not,fl_cart_not;
-    private TextView tv_not,tv_cart_not;
+    private FrameLayout fl_not, fl_cart_not;
+    private TextView tv_not, tv_cart_not;
     private LinearLayout ll_total;
     private TextView tv_total;
     private Button btn_my_order;
     private ItemSingleTone itemSingleTone;
     private ItemModel itemModel;
-    private int can_read=1;
-
+    private int can_read = 1;
     private List<ServiceModel.Sub_Service> sub_serviceList;
-
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+    private final String fineLoc = Manifest.permission.ACCESS_FINE_LOCATION;
+    private final int fine_req =1010,gps_req = 2020;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,25 +123,25 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void initView()
-    {
+    private void initView() {
         sub_serviceList = new ArrayList<>();
         itemSingleTone = ItemSingleTone.getInstance();
         preferences = Preferences.getInstance();
         userSingleTone = UserSingleTone.getInstance();
         userModel = userSingleTone.getUserModel();
-        toolbar =  findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        drawer =  findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.icon_cart));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView =  findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         View view = navigationView.getHeaderView(0);
-        image = view.findViewById(R.id.image);
+        //image = view.findViewById(R.id.image);
         tv_name = view.findViewById(R.id.tv_name);
         navigationView.setNavigationItemSelectedListener(this);
         ////////////////////////////////////////////////////////
@@ -137,8 +152,8 @@ public class HomeActivity extends AppCompatActivity
 
         ////////////////////////////////////////////////////////
         ll_total = findViewById(R.id.ll_total);
-        tv_total =findViewById(R.id.tv_total);
-        btn_my_order =findViewById(R.id.btn_my_order);
+        tv_total = findViewById(R.id.tv_total);
+        btn_my_order = findViewById(R.id.btn_my_order);
 
         btn_my_order.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,8 +163,7 @@ public class HomeActivity extends AppCompatActivity
 
                /* Fragment_Salon_details fragment_salon_details = (Fragment_Salon_details) fragmentManager.findFragmentById(R.id.fragment_home_container);
                 fragmentManager.beginTransaction().hide(fragment_salon_details).commit();*/
-                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_MyOrders))
-                {
+                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container) instanceof Fragment_MyOrders)) {
                     fragment_myOrders = Fragment_MyOrders.getInstance(itemModel);
 
                     fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_myOrders).addToBackStack("fragment_reservations").commit();
@@ -162,8 +176,7 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(View v) {
                 ll_total.setVisibility(View.GONE);
                 fl_cart_not.setVisibility(View.GONE);
-                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_MyOrders))
-                {
+                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container) instanceof Fragment_MyOrders)) {
 
                     fragment_myOrders = Fragment_MyOrders.getInstance(itemModel);
                     fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_myOrders).addToBackStack("fragment_reservations").commit();
@@ -176,29 +189,24 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 UpdateTitle(getString(R.string.notification));
-                if (can_read==1)
-                {
+                if (can_read == 1) {
                     ReadNotification(userModel.getUser_id());
                 }
 
-                if (fragmentNotifications==null)
-                {
+                if (fragmentNotifications == null) {
                     fragmentNotifications = FragmentNotifications.getInstance();
                 }
 
-                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof FragmentNotifications))
-                {
-                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container)instanceof Fragment_Home))
-                    {
+                if (!(fragmentManager.findFragmentById(R.id.fragment_home_container) instanceof FragmentNotifications)) {
+                    if (!(fragmentManager.findFragmentById(R.id.fragment_home_container) instanceof Fragment_Home)) {
                         fragmentManager.popBackStack();
 
                     }
                 }
 
 
-                if (!fragmentNotifications.isAdded())
-                {
-                    fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragmentNotifications).addToBackStack("fragmentNotifications").commit();
+                if (!fragmentNotifications.isAdded()) {
+                    fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragmentNotifications).addToBackStack("fragmentNotifications").commit();
                 }
             }
         });
@@ -207,51 +215,120 @@ public class HomeActivity extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
         fragment_home = Fragment_Home.getInstance();
-        fragmentManager.beginTransaction().add(R.id.fragment_home_container,fragment_home).addToBackStack("fragment_home").commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_home_container, fragment_home).addToBackStack("fragment_home").commit();
         UpdateTitle(getString(R.string.home));
 
         String session = preferences.getSession(this);
-        if (session.equals(Tags.session_login))
-        {
+        if (session.equals(Tags.session_login)) {
             this.userModel = preferences.getUserData(this);
             userSingleTone.setUserModel(this.userModel);
-            StartLocationUpdate();
+            checkGpsPermission();
             EventBus.getDefault().register(this);
             UpdateToken();
             UpdateUi(this.userModel);
             getUnReadNotificationCount(userModel.getUser_id());
         }
     }
-    public void UpdateUi(UserModel userModel)
-    {
 
-        Log.e("Photo",userModel.getUser_photo());
-        Picasso.with(this).load(Tags.IMAGE_URL+userModel.getUser_photo()).into(image);
+    public void UpdateUi(UserModel userModel) {
+
+        Log.e("Photo", userModel.getUser_photo());
+        // Picasso.with(this).load(Tags.IMAGE_URL+userModel.getUser_photo()).into(image);
         tv_name.setText(userModel.getUser_full_name());
         fl_not.setVisibility(View.VISIBLE);
     }
-    private void UpdateToken()
+
+    private void initGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    private void initLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(6000 * 5);
+        locationRequest.setFastestInterval(6000 * 5);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void checkGpsPermission()
     {
+
+        if (ContextCompat.checkSelfPermission(this,fineLoc)!=PackageManager.PERMISSION_GRANTED)
+        {
+            String [] perm = {fineLoc};
+            ActivityCompat.requestPermissions(this,perm,fine_req);
+        }else
+        {
+            if (isGpsOpen())
+            {
+                initGoogleApiClient();
+            }else
+            {
+                CreateGpsDialog();
+            }
+        }
+    }
+    private void CreateGpsDialog()
+    {
+       final AlertDialog gps_dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .create();
+
+        View view = LayoutInflater.from(this).inflate(R.layout.custom_dialog,null);
+        TextView tv_msg = view.findViewById(R.id.tv_msg);
+        tv_msg.setText(R.string.gps_will_open);
+        Button doneBtn = view.findViewById(R.id.doneBtn);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gps_dialog.dismiss();
+                openGps();
+            }
+        });
+
+        gps_dialog.getWindow().getAttributes().windowAnimations=R.style.dialog;
+        gps_dialog.setView(view);
+        gps_dialog.setCanceledOnTouchOutside(false);
+        gps_dialog.show();
+
+    }
+    private void openGps()
+    {
+
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(intent,gps_req);
+
+    }
+    private boolean isGpsOpen()
+    {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager!=null)
+        {
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }
+        return false;
+    }
+    private void UpdateToken() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             String token = task.getResult().getToken();
                             Api.getService()
-                                    .UpdateTokenId(userModel.getUser_id(),token)
+                                    .UpdateTokenId(userModel.getUser_id(), token)
                                     .enqueue(new Callback<ResponsModel>() {
                                         @Override
                                         public void onResponse(Call<ResponsModel> call, Response<ResponsModel> response) {
-                                            if (response.isSuccessful())
-                                            {
-                                                if (response.body().getSuccess_token_id()==1)
-                                                {
-                                                    Log.e("Token updated","Token updated successfully");
-                                                }else
-                                                {
-                                                    Log.e("Token updated","Token updated failed");
+                                            if (response.isSuccessful()) {
+                                                if (response.body().getSuccess_token_id() == 1) {
+                                                    Log.e("Token updated", "Token updated successfully");
+                                                } else {
+                                                    Log.e("Token updated", "Token updated failed");
 
                                                 }
                                             }
@@ -259,48 +336,45 @@ public class HomeActivity extends AppCompatActivity
 
                                         @Override
                                         public void onFailure(Call<ResponsModel> call, Throwable t) {
-                                            Log.e("Error",t.getMessage());
+                                            Log.e("Error", t.getMessage());
+
                                         }
                                     });
                         }
                     }
                 });
     }
-    public void UpdateCartNot(int not_count)
-    {
 
-        if (not_count>0)
-        {
+    public void UpdateCartNot(int not_count) {
+
+        if (not_count > 0) {
             fl_cart_not.setVisibility(View.VISIBLE);
             tv_cart_not.setVisibility(View.VISIBLE);
             tv_cart_not.setText(String.valueOf(not_count));
 
-        }else
-            {
-                tv_cart_not.setVisibility(View.GONE);
+        } else {
+            tv_cart_not.setVisibility(View.GONE);
 
-                fl_cart_not.setVisibility(View.GONE);
-            }
+            fl_cart_not.setVisibility(View.GONE);
+        }
     }
-    public void UpdateReservationCostTotal(int total)
-    {
-        if (total>0)
-        {
+
+    public void UpdateReservationCostTotal(int total) {
+        if (total > 0) {
             ll_total.setVisibility(View.VISIBLE);
-            tv_total.setText(getString(R.string.total)+" "+total+" "+getString(R.string.sar));
-        }else
-            {
-                ll_total.setVisibility(View.GONE);
+            tv_total.setText(getString(R.string.total) + " " + total + " " + getString(R.string.sar));
+        } else {
+            ll_total.setVisibility(View.GONE);
 
-            }
+        }
     }
-    public void CreateAlertClearItemCart(String msg)
-    {
+
+    public void CreateAlertClearItemCart(String msg) {
         final AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setCancelable(false)
                 .create();
 
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_clear_cart,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_clear_cart, null);
         TextView tv_msg = view.findViewById(R.id.tv_msg);
         Button doneBtn = view.findViewById(R.id.doneBtn);
         Button cancelBtn = view.findViewById(R.id.cancelBtn);
@@ -327,42 +401,38 @@ public class HomeActivity extends AppCompatActivity
         alertDialog.show();
 
 
-
-
     }
 
-    private void getUnReadNotificationCount(String user_id)
-    {
+    private void getUnReadNotificationCount(String user_id) {
         Api.getService()
                 .getUnReadNotificationsCount(user_id)
                 .enqueue(new Callback<UnReadModel>() {
                     @Override
                     public void onResponse(Call<UnReadModel> call, Response<UnReadModel> response) {
-                        if (response.isSuccessful())
-                        {
+                        if (response.isSuccessful()) {
                             UpdateNotificationUi(response.body().getAlert_count());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<UnReadModel> call, Throwable t) {
-                        Log.e("Error",t.getMessage());
-                        Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                        Log.e("Error", t.getMessage());
+                        try {
+                            Toast.makeText(HomeActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
 
-    private void ReadNotification(String user_id)
-    {
+    private void ReadNotification(String user_id) {
         Api.getService()
-                .ReadNotifications(user_id,"1")
+                .ReadNotifications(user_id, "1")
                 .enqueue(new Callback<ResponsModel>() {
                     @Override
                     public void onResponse(Call<ResponsModel> call, Response<ResponsModel> response) {
-                        if (response.isSuccessful())
-                        {
-                            if (response.body().getSuccess_read()==1)
-                            {
+                        if (response.isSuccessful()) {
+                            if (response.body().getSuccess_read() == 1) {
                                 UpdateNotificationUi(0);
                             }
                         }
@@ -370,25 +440,25 @@ public class HomeActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
-                        Log.e("Error",t.getMessage());
-                        Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+                        Log.e("Error", t.getMessage());
+                        try {
+                            Toast.makeText(HomeActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
 
                     }
                 });
     }
 
-    private void UpdateNotificationUi(int not_count)
-    {
-        if (not_count>0)
-        {
+    private void UpdateNotificationUi(int not_count) {
+        if (not_count > 0) {
             tv_not.setVisibility(View.VISIBLE);
             tv_not.setText(String.valueOf(not_count));
-        }else
-            {
-                can_read=0;
-                tv_not.setVisibility(View.GONE);
+        } else {
+            can_read = 0;
+            tv_not.setVisibility(View.GONE);
 
-            }
+        }
     }
 
     private void ClearDataCart() {
@@ -407,42 +477,28 @@ public class HomeActivity extends AppCompatActivity
 */
 
     }
-    public void hideCartTotal()
-    {
+
+    public void hideCartTotal() {
         UpdateCartNot(0);
         ll_total.setVisibility(View.GONE);
     }
-    private void StartLocationUpdate()
-    {
-        intentService = new Intent(this, UpdateLocation.class);
-        startService(intentService);
-    }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void ListenForLocationUpdate(LocationModel locationModel)
-    {
-        Api.getService()
-                .updateLocation(userModel.getUser_id(),locationModel.getLat(),locationModel.getLng())
-                .enqueue(new Callback<ResponsModel>() {
-                    @Override
-                    public void onResponse(Call<ResponsModel> call, Response<ResponsModel> response) {
-                        if (response.isSuccessful())
-                        {
-                            if (response.body().getSuccess_location()==1)
-                            {
-                                Log.e("location updated","location updated successfully");
-                            }else
-                                {
-                                    Log.e("location updated","location updated failed");
 
-                                }
-                        }
-                    }
+    private void StartLocationUpdate() {
+        Log.e("Connected","connected");
+        initLocationRequest();
+        if (ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                onLocationChanged(locationResult.getLastLocation());
+            }
+        };
 
-                    @Override
-                    public void onFailure(Call<ResponsModel> call, Throwable t) {
-                        Log.e("Error",t.getMessage());
-                    }
-                });
+        LocationServices.getFusedLocationProviderClient(HomeActivity.this).requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+
+        /*intentService = new Intent(this, UpdateLocation.class);
+        startService(intentService);*/
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -718,7 +774,10 @@ public class HomeActivity extends AppCompatActivity
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         dialog.dismiss();
-                        Toast.makeText(HomeActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(HomeActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
 
                     }
                 });
@@ -792,6 +851,16 @@ public class HomeActivity extends AppCompatActivity
         {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+        if (requestCode==gps_req)
+        {
+            if (isGpsOpen())
+            {
+                initGoogleApiClient();
+            }else
+            {
+                CreateGpsDialog();
+            }
+        }
 
     }
 
@@ -803,14 +872,29 @@ public class HomeActivity extends AppCompatActivity
         {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+        if (requestCode==fine_req)
+        {
+            if (grantResults.length>0)
+            {
+                if (grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                {
+                    initGoogleApiClient();
+
+                }
+            }
+        }
+
+
     }
 
     @Override
     protected void onDestroy()
     {
-        if (intentService!=null)
+        if (googleApiClient!=null)
         {
-            stopService(intentService);
+            LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(locationCallback);
+            googleApiClient.disconnect();
         }
 
         if (EventBus.getDefault().isRegistered(this))
@@ -964,6 +1048,79 @@ public class HomeActivity extends AppCompatActivity
         fragmentManager.popBackStack("fragmentNotifications", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         ClearItemModel();
     }
+
+
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        StartLocationUpdate();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+        if (googleApiClient!=null)
+        {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e("Loc",location.getLongitude()+"_____");
+        if (googleApiClient!=null)
+        {
+            googleApiClient.disconnect();
+            UpdateLocation(location.getLatitude(),location.getLongitude());
+            LocationServices.getFusedLocationProviderClient(this)
+                    .removeLocationUpdates(new LocationCallback());
+        }
+
+    }
+
+    private void UpdateLocation(double lat,double lng)
+    {
+        if (userModel!=null)
+        {
+            Api.getService()
+                    .updateLocation(userModel.getUser_id(),lat,lng)
+                    .enqueue(new Callback<ResponsModel>() {
+                        @Override
+                        public void onResponse(Call<ResponsModel> call, Response<ResponsModel> response) {
+                            if (response.isSuccessful())
+                            {
+                                if (response.body().getSuccess_location()==1)
+                                {
+                                    Log.e("location updated","location updated successfully");
+                                }else
+                                {
+                                    Log.e("location updated","location updated failed");
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponsModel> call, Throwable t) {
+                            Log.e("Error",t.getMessage());
+                            try {
+                                Toast.makeText(HomeActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                            }catch (NullPointerException e){}
+                        }
+                    });
+        }
+
+    }
+
+
 }
+
 
 

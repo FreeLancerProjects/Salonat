@@ -97,7 +97,10 @@ public class Fragment_Home extends Fragment {
                     public void onFailure(Call<List<SalonModel>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         progBar.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -105,11 +108,7 @@ public class Fragment_Home extends Fragment {
 
     public void setItem(SalonModel salonModel) {
         homeActivity.UpdateTitle(salonModel.getTitle());
-
-        if (fragment_salon_details==null)
-        {
-            fragment_salon_details = Fragment_Salon_details.getInstance(salonModel);
-        }
+        fragment_salon_details = Fragment_Salon_details.getInstance(salonModel);
         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container,fragment_salon_details).addToBackStack("fragment_salon_details").commit();
 
     }

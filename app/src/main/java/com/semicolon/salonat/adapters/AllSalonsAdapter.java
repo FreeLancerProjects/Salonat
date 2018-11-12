@@ -71,11 +71,7 @@ public class AllSalonsAdapter extends RecyclerView.Adapter<AllSalonsAdapter.Hold
             tv_type = itemView.findViewById(R.id.tv_type);
             tv_address = itemView.findViewById(R.id.tv_address);
             rateBar = itemView.findViewById(R.id.rateBar);
-            rateBar.setEnabled(false);
-            rateBar.setClickable(false);
-            rateBar.setSelected(false);
-            rateBar.setFocusable(false);
-            rateBar.setFocusableInTouchMode(false);
+            rateBar.setIndicator(true);
 
 
 
@@ -87,7 +83,6 @@ public class AllSalonsAdapter extends RecyclerView.Adapter<AllSalonsAdapter.Hold
             tv_name.setText(salonModel.getTitle());
             tv_type.setText("صالون/ حريمي");
             tv_address.setText(salonModel.getAddress());
-
             SimpleRatingBar.AnimationBuilder animationBuilder = rateBar.getAnimationBuilder();
             animationBuilder.setDuration(1000)
                     .setRatingTarget((float)(salonModel.getSalon_stars_num()))
@@ -95,7 +90,6 @@ public class AllSalonsAdapter extends RecyclerView.Adapter<AllSalonsAdapter.Hold
                     .setRepeatMode(ValueAnimator.RESTART)
                     .setRepeatCount(0)
                     .start();
-
         }
 
 

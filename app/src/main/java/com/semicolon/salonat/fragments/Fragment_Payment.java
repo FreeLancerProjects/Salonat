@@ -220,8 +220,10 @@ public class Fragment_Payment extends Fragment {
                     public void onFailure(Call<ResponsModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         dialog.dismiss();
-                        Toast.makeText(homeActivity,R.string.something, Toast.LENGTH_SHORT).show();
-                    }
+                        try {
+                            Toast.makeText(getActivity(), R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}                    }
                 });
 
     }

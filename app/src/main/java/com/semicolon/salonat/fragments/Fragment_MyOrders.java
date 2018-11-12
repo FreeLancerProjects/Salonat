@@ -61,6 +61,8 @@ public class Fragment_MyOrders extends Fragment {
         tv_name = view.findViewById(R.id.tv_name);
         tv_type = view.findViewById(R.id.tv_type);
         rateBar = view.findViewById(R.id.rateBar);
+        rateBar.setIndicator(true);
+
         pager_main_photo = view.findViewById(R.id.pager_main_photo);
         tab_main_photo = view.findViewById(R.id.tab_main_photo);
         pager_main_photo.beginFakeDrag();
@@ -148,9 +150,18 @@ public class Fragment_MyOrders extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timerTask.cancel();
-        timer.purge();
-        timer.cancel();
+        if (timerTask!=null)
+        {
+            timerTask.cancel();
+
+        }
+
+        if (timer!=null)
+        {
+            timer.purge();
+            timer.cancel();
+        }
+
 
     }
 }

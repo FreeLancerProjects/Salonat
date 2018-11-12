@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +43,6 @@ import com.semicolon.salonat.remote.Api;
 import com.semicolon.salonat.share.Common;
 import com.semicolon.salonat.singletone.UserSingleTone;
 import com.semicolon.salonat.tags.Tags;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,7 @@ public class Fragment_Profile extends Fragment {
     private static final String TAG = "user_data";
     private RoundedImageView image;
     private KenBurnsView image_bg;
-    private ImageView image_update_photo;
+    //private ImageView image_update_photo;
     private TextView tv_name,tv_phone,tv_email, tv_country, tv_city,tv_address;
     private LinearLayout ll_update_name;
     private CardView cardView_update_phone,cardView_update_email,cardView_update_password,cardView_update_country,cardView_update_city,cardView_update_address;
@@ -115,7 +113,7 @@ public class Fragment_Profile extends Fragment {
         preferences = Preferences.getInstance();
         image = view.findViewById(R.id.image);
         image_bg = view.findViewById(R.id.image_bg);
-        image_update_photo = view.findViewById(R.id.image_update_photo);
+        //image_update_photo = view.findViewById(R.id.image_update_photo);
         tv_name = view.findViewById(R.id.tv_name);
         tv_phone = view.findViewById(R.id.tv_phone);
         tv_email = view.findViewById(R.id.tv_email);
@@ -132,13 +130,13 @@ public class Fragment_Profile extends Fragment {
         cardView_update_address = view.findViewById(R.id.cardView_update_address);
 
 
-        image_update_photo.setOnClickListener(new View.OnClickListener() {
+        /*image_update_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckPermission(read_req);
 
             }
-        });
+        });*/
 
         ll_update_name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,9 +232,9 @@ public class Fragment_Profile extends Fragment {
         Log.e("email",userModel.getUser_email());
         Log.e("country",userModel.getAr_name()+" _ "+userModel.getEn_name());
 
-        Picasso.with(getActivity()).load(Uri.parse(Tags.IMAGE_URL+userModel.getUser_photo())).into(image);
+       /* Picasso.with(getActivity()).load(Uri.parse(Tags.IMAGE_URL+userModel.getUser_photo())).into(image);
         Picasso.with(getActivity()).load(Uri.parse(Tags.IMAGE_URL+userModel.getUser_photo())).into(image_bg);
-
+*/
         tv_name.setText(userModel.getUser_full_name());
         tv_email.setText(userModel.getUser_email());
         tv_phone.setText(userModel.getUser_phone());
@@ -443,6 +441,9 @@ public class Fragment_Profile extends Fragment {
                         edt_update.setError(getString(R.string.phone_req));
 
 
+                    }else if (!Patterns.PHONE.matcher(m_phone).matches()||m_phone.length()<6||m_phone.length()>13)
+                    {
+                        edt_update.setError(getString(R.string.inv_phone));
                     }
                     else
                     {
@@ -560,7 +561,10 @@ public class Fragment_Profile extends Fragment {
                    @Override
                    public void onFailure(Call<List<Country_City_Model>> call, Throwable t) {
                        Log.e("Error",t.getMessage());
-                       Toast.makeText(homeActivity,R.string.something, Toast.LENGTH_SHORT).show();
+                       try {
+                           Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                       }catch (NullPointerException e){}
                    }
                });
     }
@@ -640,7 +644,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         updateImagedialog.dismiss();
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
 
                     }
                 });
@@ -687,7 +694,11 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
+
                     }
                 });
     }
@@ -727,7 +738,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -768,7 +782,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -804,7 +821,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -860,7 +880,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -904,7 +927,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -945,7 +971,10 @@ public class Fragment_Profile extends Fragment {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         progressDialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }

@@ -117,7 +117,10 @@ public class Fragment_Service_In_Home extends Fragment {
                     public void onFailure(Call<List<ServiceModel>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         progBar.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
 
                     }
                 });

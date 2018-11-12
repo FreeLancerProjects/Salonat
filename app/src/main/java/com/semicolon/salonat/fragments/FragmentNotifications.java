@@ -103,7 +103,10 @@ public class FragmentNotifications extends Fragment {
                     public void onFailure(Call<List<MyReservationModel>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         progBar.setVisibility(View.GONE);
-                        Toast.makeText(homeActivity, R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }

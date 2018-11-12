@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.semicolon.salonat.R;
 import com.semicolon.salonat.models.Terms_Conditions;
@@ -62,6 +63,10 @@ public class Fragment_Terms_Conditions extends Fragment {
                     public void onFailure(Call<Terms_Conditions> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         smoothProgress.setVisibility(View.GONE);
+                        try {
+                            Toast.makeText(getActivity(),R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }

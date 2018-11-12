@@ -6,10 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -49,23 +46,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
     private ImageView image_back;
-    private CircleImageView image;
+    //private CircleImageView image;
     private EditText edt_name,edt_email,edt_address,edt_phone,edt_password;
     private TextView tv_country,tv_city;
    // private PhoneInputLayout edt_check_phone;
     private Button btn_signup;
     private final String read_permition = Manifest.permission.READ_EXTERNAL_STORAGE;
     private final int read_req = 2000,img=202;
-    private Uri uri = null;
+    //private Uri uri = null;
     private String country="",city="";
     private AlertDialog country_dialog,city_dialog,gps_dialog;
     private final String fineLoc = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -95,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        image = findViewById(R.id.image);
+        //image = findViewById(R.id.image);
         edt_name = findViewById(R.id.edt_name);
         edt_email = findViewById(R.id.edt_email);
         edt_address = findViewById(R.id.edt_address);
@@ -114,12 +108,12 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
 
-        image.setOnClickListener(new View.OnClickListener() {
+       /* image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckPermission();
             }
-        });
+        });*/
 
         tv_country.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +177,10 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onFailure(Call<List<Country_City_Model>> call, Throwable t) {
                         Log.e("Error",t.getMessage());
                         dialog.dismiss();
-                        Toast.makeText(SignUpActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(SignUpActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
     }
@@ -345,12 +342,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!TextUtils.isEmpty(m_name)&&
                 !TextUtils.isEmpty(m_phone)&&
+                Patterns.PHONE.matcher(m_phone).matches()&&
+                m_phone.length()>=6&&
+                m_phone.length()<=13&&
                 !TextUtils.isEmpty(country)&&
                 !TextUtils.isEmpty(city)&&
                 !TextUtils.isEmpty(m_email)&&
                 !TextUtils.isEmpty(m_address)&&
                 !TextUtils.isEmpty(m_password)&&
-                uri!=null&&
                 Patterns.EMAIL_ADDRESS.matcher(m_email).matches()) {
             edt_address.setError(null);
             edt_email.setError(null);
@@ -358,7 +357,7 @@ public class SignUpActivity extends AppCompatActivity {
             edt_phone.setError(null);
             edt_password.setError(null);
             Common.CloseKeyBoard(this,edt_name);
-            SignUp(m_name,m_email,m_phone,m_address,m_password,country,city,uri);
+            SignUp(m_name,m_email,m_phone,m_address,m_password,country,city);
         }else
             {
                 if (TextUtils.isEmpty(m_name))
@@ -383,6 +382,9 @@ public class SignUpActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(m_phone))
                 {
                     edt_phone.setError(getString(R.string.phone_req));
+                }else if (!Patterns.PHONE.matcher(m_phone).matches()||m_phone.length()<6||m_phone.length()>13)
+                {
+                    edt_phone.setError(getString(R.string.inv_phone));
                 }else
                 {
                     edt_phone.setError(null);
@@ -404,10 +406,7 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     Toast.makeText(this, R.string.city_req, Toast.LENGTH_SHORT).show();
                 }
-                if (uri==null)
-                {
-                    Toast.makeText(this, R.string.img_req, Toast.LENGTH_SHORT).show();
-                }
+
 
                 if (TextUtils.isEmpty(m_password))
                 {
@@ -419,12 +418,12 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
     }
-    private void SignUp(String m_name, String m_email, String m_phone, String m_address, String m_password, String country, String city, Uri uri)
+    private void SignUp(String m_name, String m_email, String m_phone, String m_address, String m_password, String country, String city)
     {
         final ProgressDialog dialog = Common.createProgressDialog(this,getString(R.string.signng_up));
         dialog.show();
 
-        RequestBody name_part = Common.getRequestBodyText(m_name);
+        /*RequestBody name_part = Common.getRequestBodyText(m_name);
         RequestBody email_part = Common.getRequestBodyText(m_email);
         RequestBody phone_part = Common.getRequestBodyText(m_phone);
         RequestBody address_part = Common.getRequestBodyText(m_address);
@@ -434,10 +433,9 @@ public class SignUpActivity extends AppCompatActivity {
         RequestBody lat_part = Common.getRequestBodyText(String.valueOf(myLat));
         RequestBody lng_part = Common.getRequestBodyText(String.valueOf(myLng));
         RequestBody token_part = Common.getRequestBodyText("");
-        MultipartBody.Part image_part = Common.getMultiPart(this,uri,"user_photo");
-
+*/
         Api.getService()
-                .SignUp(password_part,phone_part,country_part,email_part,name_part,token_part,lat_part,lng_part,city_part,address_part,image_part)
+                .SignUp(m_password,m_phone,country,m_email,m_name,"",String.valueOf(myLat),String.valueOf(myLng),city,m_address)
                 .enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -463,7 +461,10 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         dialog.dismiss();
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(SignUpActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(SignUpActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                        }catch (NullPointerException e){}
                     }
                 });
 
@@ -537,12 +538,12 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==img && resultCode==RESULT_OK && data!=null)
+        /*if (requestCode==img && resultCode==RESULT_OK && data!=null)
         {
             uri = data.getData();
             Bitmap bitmap = BitmapFactory.decodeFile(Common.getImagePath(SignUpActivity.this,uri));
             image.setImageBitmap(bitmap);
-        }else if (requestCode==gps_req)
+        }else*/ if (requestCode==gps_req)
         {
             if (isGpsOpen())
             {

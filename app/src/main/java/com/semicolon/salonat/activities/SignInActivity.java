@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,7 +90,11 @@ public class SignInActivity extends AppCompatActivity {
         }
         edt_check_phone.setPhoneNumber(m_phone);*/
 
-        if (!TextUtils.isEmpty(m_phone)&&!TextUtils.isEmpty(m_password))
+        if (!TextUtils.isEmpty(m_phone)&&
+                m_phone.length()>=6&&
+                m_phone.length()<=13&&
+                Patterns.PHONE.matcher(m_phone).matches()&&
+                !TextUtils.isEmpty(m_password))
         {
             edt_phone.setError(null);
             edt_password.setError(null);
@@ -100,6 +105,9 @@ public class SignInActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(m_phone))
                 {
                     edt_phone.setError(getString(R.string.phone_req));
+                }else if (!Patterns.PHONE.matcher(m_phone).matches()||m_phone.length()<6||m_phone.length()>13)
+                {
+                    edt_phone.setError(getString(R.string.inv_phone));
                 }else
                     {
                         edt_phone.setError(null);
@@ -146,7 +154,10 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<UserModel> call, Throwable t) {
                         Log.e("Error",t.getMessage());
-                        Toast.makeText(SignInActivity.this,R.string.something, Toast.LENGTH_LONG).show();
+                        try {
+                            Toast.makeText(SignInActivity.this,R.string.something, Toast.LENGTH_LONG).show();
+
+                        }catch (NullPointerException e){}
                         dialog.dismiss();
                     }
                 });

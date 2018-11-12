@@ -55,7 +55,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.Holder> {
             tv_name = itemView.findViewById(R.id.tv_name);
             tv_rate_state = itemView.findViewById(R.id.tv_rate_state);
             rateBar = itemView.findViewById(R.id.rateBar);
-
+            rateBar.setIndicator(true);
 
 
 

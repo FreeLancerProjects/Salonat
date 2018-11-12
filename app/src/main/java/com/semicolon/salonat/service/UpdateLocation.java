@@ -101,11 +101,14 @@ public class UpdateLocation extends Service implements GoogleApiClient.OnConnect
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (googleApiClient!=null&&googleApiClient.isConnected())
         {
             LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(new LocationCallback());
             googleApiClient.disconnect();
+            stopSelf();
         }
+        super.onDestroy();
+
+
     }
 }

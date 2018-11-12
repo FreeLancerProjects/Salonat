@@ -78,8 +78,10 @@ public class BankActivity extends AppCompatActivity {
             public void onFailure(Call<List<BankAccountModel>> call, Throwable t) {
                 smoothProgress.setVisibility(View.GONE);
                 Log.e("Error",t.getMessage());
-                Toast.makeText(BankActivity.this, R.string.something, Toast.LENGTH_SHORT).show();
-            }
+                try {
+                    Toast.makeText(BankActivity.this,R.string.something, Toast.LENGTH_SHORT).show();
+
+                }catch (NullPointerException e){}            }
         });
     }
 }

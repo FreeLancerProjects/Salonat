@@ -75,7 +75,7 @@
     <string name="uptng_email">جار تعديل البريد الالكتروني..</string>
     <string name="updtng_pass">جار تعديل كلمة المرور...</string>
     <string name="uptng_address">جار تعديل العنوان...</string>
-    <string name="rating">التقييمات</string>
+    <string name="rating">التقييم</string>
     <string name="services">الخدمات</string>
     <string name="location">الموقع</string>
     <string name="vote">آراء العملاء</string>
@@ -125,5 +125,6 @@
     <string name="amo_req">مبلغ التحويل مطلوب</string>
     <string name="sel_trans_img">إختر صورة التحويل</string>
     <string name="bokng">Booking...</string>
+    <string name="rt">التقييم</string>
 
 </resources>

@@ -124,5 +124,6 @@
     <string name="amo_req">Transfer amount is required</string>
     <string name="sel_trans_img">Choose trasnfer photo</string>
     <string name="bokng">Booking...</string>
+    <string name="rt">Rating</string>
 
 </resources>
